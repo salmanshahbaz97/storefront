@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>Store Front</title>
+    </head>
+    <body>
+    <ul>
+        <h1>{{expensive}} and and and {{expensive.title}} and {{expensive.unit_price}}</h1>
+        <h2>{{cheapest}} {{cheapest.title}} and {{cheapest.unit_price}}</h2>
+        {% for order in orders %}
+        <li>{{ order.id }} & {{order.customer.first_name}}</li>
+        {% endfor %}
+
+    </ul>
+    </body>
+</html>
