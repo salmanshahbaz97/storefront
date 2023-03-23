@@ -10,6 +10,9 @@ djangorestframework = "*"
 whitenoise = "*"
 gunicorn = "*"
 waitress = "*"
+pillow = "*"
+django-cors-headers = "*"
+redis = "*"
 
 [dev-packages]
 

@@ -14,15 +14,18 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 DEBUG = True
 
 SECRET_KEY = 'django-insecure-0nyluj6$w@9ny#f$qd#@#l^3k$)0-avv#_5#+ym3z$)g_dr6(e'
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
+
+
+
+ALLOWED_HOSTS = [] 
 
 DATABASES = {
     'default': {
@@ -42,9 +45,6 @@ DATABASES = {
 #     }
 # }
 
-
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     # third party apps
     "debug_toolbar",
     "rest_framework",
+    "corsheaders",
 
     # custom apps
     'playground',
@@ -68,6 +69,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -119,6 +121,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:8001/',
+#     'http://127.0.0.1:8001/'
+# ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -139,6 +145,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+MEDIA_URL = '/salman/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -186,3 +197,12 @@ LOGGING = {
         }
     }  
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = False
+EMAIL_PORT = 2525
+DEFAULT_FROM_EMAIL = 'salmanshahbaz97@gmail.com'
