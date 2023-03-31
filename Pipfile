@@ -13,6 +13,8 @@ waitress = "*"
 pillow = "*"
 django-cors-headers = "*"
 redis = "*"
+drf-nested-routers = "*"
+django-filter = "*"
 
 [dev-packages]
 

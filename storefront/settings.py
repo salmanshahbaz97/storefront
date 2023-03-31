@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "rest_framework",
     "corsheaders",
-
+    "django_filters",
+    
     # custom apps
     'playground',
     'store',
