@@ -1,69 +1,37 @@
+from django.db.models.aggregates import Count
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
-from .models import Product, Collection
-from .serializer import ProductSerialzier, CollectionSerializer
+from .models import Product, Collection, OrderItem
+from .serializer import ProductSerializer, CollectionSerializer
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
+from rest_framework import status, mixins
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView 
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-class CollectionList(APIView):
-    def get(self, request):
-        queryset = Collection.objects.all().order_by('id')
-        serializer = CollectionSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request):
-        serializer = CollectionSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class CollectionViewSet(ModelViewSet):
+    queryset = Collection.objects.annotate(products_count=Count('products')).all()
+    serializer_class = CollectionSerializer
 
-class CollectionDetail(APIView):
-    """
-    Retrieve, update or delete a collection instance.
-    """
-    def get_object(self, pk):
-        try:
-            return Collection.objects.get(pk=pk)
-        except Collection.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk):
-        collection = self.get_object(pk)
-        serializer = CollectionSerializer(collection)
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        collection = self.get_object(pk)
-        serializer = CollectionSerializer(collection, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        collection = self.get_object(pk)
-        collection.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-@api_view()
-def product_list(request):
-    queryset = Product.objects.select_related('collection').all().order_by('-id', 'unit_price')
-    serializer = ProductSerialzier(queryset, many=True, context={'request': request})
-    return Response(serializer.data)
+    def destroy(self, request, *args, **kwargs):
+        if Product.object.filter(collection_id = self.kwargs['pk']).count() > 0:
+            return Response({'error': 'Collection cannot be deleted because it include one or more products'})
+        return super().destroy(request, *args, **kwargs)
     
 
-@api_view()
-def product_detail(request, pk):
-    try:
-        product = get_object_or_404(Product, pk = pk)
-        serializer = ProductSerialzier(product)
-        return Response(serializer.data)
-    except Product.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all().order_by('-id')
+    serializer_class = ProductSerializer
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
+    
+    def destroy(self, request, *args, **kwargs):
+        if OrderItem.objects.filter(product_id=self.kwargs['pk']).count() > 0:
+            return Response({'error': 'Product cannot be deleted because it in one or more order items'})
+        return super().destroy(request, *args, **kwargs)

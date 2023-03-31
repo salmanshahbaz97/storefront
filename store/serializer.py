@@ -6,26 +6,30 @@ from .models import Product, Collection
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
-        fields = ['id', 'title']
+        fields = ['id', 'title', 'products_count']
 
-class ProductSerialzier(serializers.Serializer):
-    id = serializers.IntegerField()
-    title = serializers.CharField(max_length=255)
-    unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)
+    products_count = serializers.IntegerField(read_only=True)
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'inventory','unit_price', 'price_with_tax', 'collection']
+
     price_with_tax = serializers.SerializerMethodField(method_name='price_tax')
 
     # serializing relationships
 
-    # returning id of the collection
-    collection = serializers.PrimaryKeyRelatedField(
-        queryset = Collection.objects.all()
-    )
+    # # returning id of the collection
+    # collection = serializers.PrimaryKeyRelatedField(
+    #     queryset = Collection.objects.all()
+    # )
 
-    # returning title of the collection
-    collection = serializers.StringRelatedField()    
+    # # returning title of the collection
+    # collection = serializers.StringRelatedField()    
 
-    # for adding collection object in response
-    collection = CollectionSerializer()
+    # # for adding collection object in response
+    # collection = CollectionSerializer()
 
     # for hyperlink 
     collection = serializers.HyperlinkedRelatedField(

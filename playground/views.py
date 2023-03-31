@@ -18,3 +18,5 @@ def say_hello(request):
     products = Product.objects.all()
     return render(request, 'index.html', {'name': 'salman shahbaz', 'orders': list(queryset), 'expensive': expensive, 'cheapest': cheapest})
     
+
+
