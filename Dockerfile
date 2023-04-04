@@ -16,5 +16,8 @@ COPY . /app
 # Expose the port that the application will run on
 EXPOSE 8000
 
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 # Run the command to start the Django development server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

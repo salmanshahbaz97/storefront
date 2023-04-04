@@ -4,8 +4,9 @@ from .models import Collection, Product, Customer, Order
 # Register your models here.
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'email', 'membership']
-    list_editable = ['membership', 'last_name', 'email']
-    ordering = ['first_name']
+    list_editable = ['membership']
+    list_select_related = ['user']
+    ordering = ['user__first_name']
     list_per_page = 10
 
 

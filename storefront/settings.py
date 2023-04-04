@@ -27,23 +27,23 @@ SECRET_KEY = 'django-insecure-0nyluj6$w@9ny#f$qd#@#l^3k$)0-avv#_5#+ym3z$)g_dr6(e
 
 ALLOWED_HOSTS = [] 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'storefront',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': 'salman.123'
-    }
-}
-
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'storefront',
+#         'HOST': 'localhost',
+#         'USER': 'root',
+#         'PASSWORD': 'salman.123'
 #     }
 # }
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Application definition
 
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "django_filters",
+    "djoser",
     
     # custom apps
     'playground',
@@ -165,8 +166,14 @@ INTERNAL_IPS = [
 
 REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
+     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
 
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+}
 
 LOGGING = {
     'version': 1,
@@ -199,6 +206,8 @@ LOGGING = {
     }  
 }
 
+
+AUTH_USER_MODEL = 'core.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'localhost'
