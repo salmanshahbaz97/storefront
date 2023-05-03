@@ -34,6 +34,7 @@ class Product(models.Model):
     class Meta:
         ordering = ['unit_price']
 
+
 class Customer(models.Model):
     MEMBERSHIP_BRONZE = 'B'
     MEMBERSHIP_SILVER = 'S'
@@ -61,7 +62,8 @@ class Customer(models.Model):
         return self.user.email
     
     class Meta:
-        ordering =['user__first_name', 'user__last_name']
+        ordering = ['user__first_name', 'user__last_name']
+
 
 class Address(models.Model):
     street = models.CharField(max_length=255)
